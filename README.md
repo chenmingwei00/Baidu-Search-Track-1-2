@@ -15,6 +15,13 @@
   d.然后利用召回模型对任务一中不包含答案的文档进行预测，标签为1的文档进行召回，最终得到提交文件，在第一次训练进行参数调节后，分数直接为0.786;
   之后就没有找到更好的方法继续提高
 ```
+### 1.3 数据处理代码注释：
+```
+ 1)形成语义相似度测试数据预测数据的函数位置在ernie_dqa_task2/applications/tasks/sequence_labeling/data/data_deal.py的
+   t1tot2_test函数中.
+ 2)形成召回模型训练数据集的代码位置在/ernie_dqa_task2_recall/applications/tasks/sequence_labeling/data/data_deal.py的constaruct_second_
+   data函数中
+```
 ## 2. 项目结构
 
  与任务一目录结构类似，请参考:
