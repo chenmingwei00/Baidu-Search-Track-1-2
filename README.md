@@ -15,11 +15,11 @@
   d.然后利用召回模型对任务一中不包含答案的文档进行预测，标签为1的文档进行召回，最终得到提交文件，在第一次训练进行参数调节后，分数直接为0.786;
   之后就没有找到更好的方法继续提高
 ```
-## 项目结构
+## 2. 项目结构
 ```
  与任务一目录结构类似，请参考:
     https://github.com/chenmingwei00/Baidu-Search-Track-1
 ```
-## 使用方式
+## 3. 使用方式
  a. 使用方式可以直接运行本项目的AISTudio上的项目，生成新的副本，按照main.ipynb顺序指导运行生成提交文件
  b. 在AI Studio上[运行本项目](https://github.com/chenmingwei00/Baidu-Search-Track-1-2)  
