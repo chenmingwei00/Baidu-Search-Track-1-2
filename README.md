@@ -23,3 +23,8 @@
 ## 3. 使用方式
  a. 使用方式可以直接运行本项目的AISTudio上的项目，生成新的副本，按照main.ipynb顺序指导运行生成提交文件
  b. 在AI Studio上[运行本项目](https://github.com/chenmingwei00/Baidu-Search-Track-1-2)  
+## 4.参数设置、参数遍历
+```
+参数设置均为官方默认设置，epoch随着模型的优化，改为5，直接采用5个epoch,保存模型文件每1500step保存一次，直接使用附近提交多次，寻找最好的一次
+模型作为最后的模型
+```
