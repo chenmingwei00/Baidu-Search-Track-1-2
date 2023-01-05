@@ -1,5 +1,119 @@
+from itertools import combinations
+from tqdm import tqdm
+def t1tot2_test():
+    """
+    根据第一期的答案进行第二阶段的预测
+    :return:
+    """
+    t1_path='./test_data/test.json'
+    t1_answer='./test_data/subtask1_test_pred_combine_0.68987.txt'
+    t2_path='./task2_data/data_task2/test_query_doc.json'
+
+    with open(t1_path,'r',encoding='utf-8') as test1, \
+        open(t1_answer, 'r', encoding='utf-8') as test1_ans,\
+        open(t2_path,'r',encoding='utf-8') as test2:
+        lines1=test1.readlines()
+        lines_ans1=test1_ans.readlines()
+        lines2=test2.readlines()
+
+        id2ans={}
+        query2doctext={}
+        id=0
+        for t1line,pre_ans in zip(lines1,lines_ans1):
+            t1_data=json.loads(t1line)
+
+            query=t1_data['query']
+            doc_text=t1_data['doc_text']
+            # tags = jieba.analyse.extract_tags(query, topK=100, withWeight=True)
+            # for v, n in tags:
+            #     # 权重是小数，为了凑整，乘了一万
+            #     print(v + '\t' + str(int(n * 10000)))
+            # max_str = longestCommonSubstr(doc_text.lower(), query.lower())
+            # print(max_str)
+            #
+            # for k,v in t1_data.items():
+            #     print(k,v)
+            t1_data['id']=id
+            if t1_data['query'] not in query2doctext:
+                query2doctext[t1_data['query']]=[t1_data]
+            else:
+                query2doctext[t1_data['query']].append(t1_data)
+            id2ans[id]=pre_ans
+            id+=1
+        new_test2=[]
+        for line2 in lines2:
+            t2_data=json.loads(line2)
+            query=t2_data['query']
+
+            t1_docs=query2doctext[query]
+            t1_texts=[ele['doc_text'] for ele in t1_docs]
+            docs=t2_data['docs']
+
+            for t_doc in docs:
+                t2_doctext=t_doc['doc_text']
+                if t2_doctext in t1_texts: #与任务1query和doc_text相同的ans付给任务2
+                    doc_indx=t1_texts.index(t2_doctext)
+                    t1_macth=t1_docs[doc_indx]
+                    t1_id=t1_macth['id']
+                    ans=id2ans[t1_id]
+                    ans=ans.strip().split('\t')[-1]
+                    t_doc['ans']=ans
+                else:
+                    print('..................33333333...................')
+            new_test2.append(t2_data)
+        with open('./answer_nli_data.txt','w',encoding='utf-8') as test2pre,\
+             open('./context_answer_nli_data.txt','w',encoding='utf-8') as context_pre:
+            for t_doc in tqdm(new_test2):
+                query=t_doc['query']
+
+                remove_noans=[]
+
+                docs=t_doc['docs']
+                contexts= list(combinations(docs, 2))
+
+                for context_pair in contexts:
+                    DOC1=context_pair[0]
+                    DOC2=context_pair[1]
+                    doc_id1=DOC1['doc_id']
+                    ans1=DOC1['doc_text']
+
+                    doc_id2 = DOC2['doc_id']
+                    ans2 = DOC2['doc_text']
+
+                    test2_pre_line = '\t'.join([query, doc_id1, ans1, doc_id2, ans2])
+                    context_pre.write(test2_pre_line + '\n')
+
+                for ele in t_doc['docs']:
+                    if ele['ans']!='NoAnswer':
+                        remove_noans.append(ele)
+                doc_pair = list(combinations(remove_noans, 2))
+
+                for t_pair in doc_pair:
+                    test2_pre={}
+                    test2_pre['query']=query
+                    doc1=t_pair[0]
+
+                    doc2=t_pair[1]
+                    ans1=doc1['ans']
+                    doc_id1=doc1['doc_id']
+                    ans2 = doc2['ans']
+                    doc_id2=doc2['doc_id']
+
+                    test2_pre['ans1']=ans1
+                    test2_pre['doc_id1']=doc_id1
+                    test2_pre['ans2']=ans2
+                    test2_pre['doc_id2']=doc_id2
+                    test2_pre_line='\t'.join([query,doc_id1,ans1,doc_id2,ans2])
+                    test2pre.write(test2_pre_line+'\n')
+
+                    # padd_context=(312-len(ans1)-len(ans2))/2
+                    #
+                    # while len(ans1)<
 
 
+        print('1111')
+
+        print('111')
 import json
 def test_data_split():
     """
